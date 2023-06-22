@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { PostService } from "./post.service";
 import { Types } from "mongoose";
 import { CreatePostDto } from "../post/dto/create-post.dto";
@@ -10,13 +10,17 @@ export class PostController {
         private postService: PostService,
     ){}
     @Post('/create')
+    
     createPost(@Body() dto: CreatePostDto){
         return this.postService.createPost(dto)
     }
 
     @Get()
-    getAll(){
-        const post = this.postService.getAllPosts()
+    getAll(
+        @Query('count') count: number,
+        @Query('offset') offset: number
+    ){
+        const post = this.postService.getAllPosts(count, offset)
         return post
     }
 

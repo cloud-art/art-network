@@ -1,4 +1,4 @@
-import { Injectable, Type } from "@nestjs/common";
+import { Injectable, Query, Type, UploadedFile } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Post } from "./schemas/post.schema";
 import { Model, Types } from "mongoose";
@@ -22,8 +22,8 @@ export class PostService {
         return post
     }
 
-    async getAllPosts(): Promise<Array<Post>>{
-        const posts = this.postModel.find()
+    async getAllPosts(count: number = 10, offset: number = 0): Promise<Array<Post>>{
+        const posts = this.postModel.find().skip(offset).limit(count)
         return posts
     }
 

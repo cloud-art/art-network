@@ -17,6 +17,9 @@ export class User {
   @Prop()
   password: string;
 
+  @Prop()
+  avatar: string;
+
   @Prop({type: [{type: Types.ObjectId, ref: 'Post'}]})
   posts: Array<Types.ObjectId>;
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UploadedFile } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { User } from "./schemas/user.schema";
@@ -6,13 +6,15 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { Contact } from "./schemas/contact.schema";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { FileService, FileType } from "src/file/file.service";
 
 @Injectable()
 export class UserService {
 
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
-        @InjectModel(Contact.name) private contactModel: Model<Contact>
+        @InjectModel(Contact.name) private contactModel: Model<Contact>,
+        private fileService: FileService
     ) {}
 
     // Users
@@ -21,8 +23,9 @@ export class UserService {
 
     }
 
-    async registration(dto: CreateUserDto): Promise<User>{
-        const user = await this.userModel.create(dto)
+    async registration(@UploadedFile() avatar: Express.Multer.File, dto: CreateUserDto): Promise<User>{
+        const avatarPath = this.fileService.createFile(FileType.IMAGE, avatar)
+        const user = await this.userModel.create({...dto, avatar: avatarPath})
         return user
     }
 
@@ -38,6 +41,13 @@ export class UserService {
     async getOne(id: Types.ObjectId): Promise<User | null>{
         const user = await this.userModel.findById(id).populate('posts contacts')
         return user
+    } 
+
+    async search(search: string, count: number = 10, offset: number = 0): Promise<Array<User>>{
+        const users = await this.userModel.find({
+            username: {$regex: new RegExp(search, 'i')}
+        }).skip(offset).limit(count)
+        return users
     } 
 
     async updateUser(id: Types.ObjectId, dto: UpdateUserDto): Promise<Types.ObjectId | null>{

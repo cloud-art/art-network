@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Types } from "mongoose";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('/user')
 export class UserController {
@@ -18,8 +19,9 @@ export class UserController {
     }
 
     @Post('/registration')
-    registration(@Body() dto: CreateUserDto){
-        return this.userService.registration(dto)
+    @UseInterceptors(FileInterceptor('avatar'))
+    registration(@UploadedFile() avatar: Express.Multer.File, @Body() dto: CreateUserDto){
+        return this.userService.registration(avatar, dto)
     }
 
     auth(){
@@ -29,6 +31,15 @@ export class UserController {
     @Get()
     getAll(){
         return this.userService.getAll()
+    }
+
+    @Get('/searchUser')
+    searchUser(
+        @Query('search') search: string,
+        @Query('count') count: number,
+        @Query('offset') offset: number
+    ){
+        return this.userService.search(search, count, offset)
     }
 
     @Get('/getOne/:id')
