@@ -76,8 +76,8 @@ export class UserService {
         return contact
     }
 
-    async getAllContacts(): Promise<Array<any>>{
-        const contacts = await this.contactModel.find()
+    async getAllContacts(count: number = 10, offset: number = 0): Promise<Array<any>>{
+        const contacts = await this.contactModel.find().skip(offset).limit(count)
         return contacts
     }
 

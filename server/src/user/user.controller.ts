@@ -64,8 +64,11 @@ export class UserController {
     }
 
     @Get('/contact')
-    getAllContacts(){
-        return this.userService.getAllContacts()
+    getAllContacts(
+        @Query('count') count: number,
+        @Query('offset') offset: number
+    ){
+        return this.userService.getAllContacts(count, offset)
     }
 
     @Delete('/deleteContact/:id')
