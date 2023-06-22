@@ -15,7 +15,7 @@ export class PostController {
         return this.postService.createPost(dto)
     }
 
-    @Get()
+    @Get('/getAll')
     getAll(
         @Query('count') count: number,
         @Query('offset') offset: number
@@ -24,10 +24,19 @@ export class PostController {
         return post
     }
 
-    @Get(':id')
+    @Get('/getOne/:id')
     getOne(@Param('id') id: Types.ObjectId){
         const post = this.postService.getOnePost(id)
         return post
+    }
+
+    @Get('/search')
+    searchContact(
+        @Query('search') search: string,
+        @Query('count') count: number,
+        @Query('offset') offset: number
+    ){
+        return this.postService.searchByTitle(search, count, offset)
     }
 
     @Put(':id')

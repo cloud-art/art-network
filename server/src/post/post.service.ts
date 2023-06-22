@@ -1,4 +1,4 @@
-import { Injectable, Query, Type, UploadedFile } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Post } from "./schemas/post.schema";
 import { Model, Types } from "mongoose";
@@ -31,6 +31,13 @@ export class PostService {
         const post = this.postModel.findById(id)
         return post
     }
+
+    async searchByTitle(search: string, count: number = 10, offset: number = 0): Promise<Array<Post>>{
+        const posts = await this.postModel.find({
+            title: {$regex: new RegExp(search, 'i')}
+        }).skip(offset).limit(count)
+        return posts
+    } 
 
     async updatePost(id: Types.ObjectId, dto: UpdatePostDto): Promise<Types.ObjectId | null>{
         const post = await this.postModel.findByIdAndUpdate(id, dto)

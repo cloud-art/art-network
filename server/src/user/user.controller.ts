@@ -39,7 +39,7 @@ export class UserController {
         @Query('count') count: number,
         @Query('offset') offset: number
     ){
-        return this.userService.search(search, count, offset)
+        return this.userService.searchUsers(search, count, offset)
     }
 
     @Get('/getOne/:id')
@@ -69,6 +69,16 @@ export class UserController {
         @Query('offset') offset: number
     ){
         return this.userService.getAllContacts(count, offset)
+    }
+
+    @Get('/searchContact')
+    searchContact(
+        @Query('id') id: Types.ObjectId,
+        @Query('search') search: string,
+        @Query('count') count: number,
+        @Query('offset') offset: number
+    ){
+        return this.userService.searchContacts(id, search, count, offset)
     }
 
     @Delete('/deleteContact/:id')

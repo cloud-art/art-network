@@ -43,7 +43,7 @@ export class UserService {
         return user
     } 
 
-    async search(search: string, count: number = 10, offset: number = 0): Promise<Array<User>>{
+    async searchUsers(search: string, count: number = 10, offset: number = 0): Promise<Array<User>>{
         const users = await this.userModel.find({
             username: {$regex: new RegExp(search, 'i')}
         }).skip(offset).limit(count)
@@ -80,6 +80,20 @@ export class UserService {
         const contacts = await this.contactModel.find().skip(offset).limit(count)
         return contacts
     }
+
+        async searchContacts(id: Types.ObjectId, search: string, count: number = 10, offset: number = 0): Promise<Array<User>>{
+        const user = await this.userModel.findById(id)
+        const userContacts = await this.contactModel.find({_id: {$in: user?.contacts}})
+
+        if (user){
+            const users = await this.userModel.find({
+                _id: {$in: userContacts.map(contact => contact.userChildren)},
+                username: {$regex: new RegExp(search, 'i')}
+            }).skip(offset).limit(count)
+            return users
+        }
+        return []
+    } 
 
     async deleteContact(id: Types.ObjectId): Promise<Types.ObjectId | null>{
         const contact = await this.contactModel.findById(id)
