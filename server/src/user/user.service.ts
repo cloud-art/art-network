@@ -1,4 +1,4 @@
-import { Injectable, UploadedFile } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, UploadedFile } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { User } from "./schemas/user.schema";
@@ -7,6 +7,28 @@ import { CreateContactDto } from "./dto/create-contact.dto";
 import { Contact } from "./schemas/contact.schema";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { FileService, FileType } from "src/file/file.service";
+import { LoginUserDto } from "./dto/login-user.dto";
+import { UpdateTokenDto } from "./dto/update-token.dto";
+import * as jwt from 'jsonwebtoken'
+import * as bcrypt from 'bcrypt';
+
+const generateAccessToken = (
+    id: Types.ObjectId,
+    username: string, 
+    name: string, 
+    surname: string, 
+    avatar: string
+) => {
+    const payload = {
+        id: id,
+        username: username,
+        name: name,
+        surname: surname,
+        avatar: avatar
+    }
+    const secretKey = 'secretKey'
+    return jwt.sign(payload, process.env.SECRET_JWT_KEY || secretKey, {expiresIn: "24h"} )
+}
 
 @Injectable()
 export class UserService {
@@ -19,18 +41,42 @@ export class UserService {
 
     // Users
 
-    async login(){
-
-    }
-
     async registration(@UploadedFile() avatar: Express.Multer.File, dto: CreateUserDto): Promise<User>{
-        const avatarPath = this.fileService.createFile(FileType.IMAGE, avatar)
-        const user = await this.userModel.create({...dto, avatar: avatarPath})
+        const avatarPath = this.fileService.createFile(FileType.IMAGE, avatar) 
+        const hashPassword = bcrypt.hashSync(dto.password, 7)
+        const user = await this.userModel.create({...dto, password: hashPassword, avatar: avatarPath})
         return user
     }
 
-    async auth(){
+    async login(dto: LoginUserDto){
+        const user = await this.userModel.findOne({username: dto.username})
 
+        if (!user) throw new HttpException({
+            "statusCode": HttpStatus.NOT_FOUND,
+            "message": "Пользователь не найден"
+        }, HttpStatus.NOT_FOUND)
+
+        const validPassword = bcrypt.compareSync(dto.password, user.password)
+
+        if (!validPassword) throw new HttpException({
+            "statusCode": HttpStatus.BAD_REQUEST,
+            "message": "Неверный пароль"
+        }, HttpStatus.BAD_REQUEST)
+
+        const token = generateAccessToken(user.id, user.username, user.name, user.surname, user.avatar)
+        // Поменять на нормальный возврат json
+        return JSON.parse(`{"token": "${token}"}`)
+    }
+
+    async updateToken(dto: UpdateTokenDto){
+        const token = generateAccessToken(
+            dto.id, 
+            dto.username, 
+            dto.name, 
+            dto.surname,
+            dto.avatar
+        )
+        return JSON.parse(`{"token": "${token}"}`)
     }
 
     async getAll(): Promise<Array<User>>{
@@ -57,6 +103,7 @@ export class UserService {
 
     async delete(id: Types.ObjectId): Promise<Types.ObjectId | null>{
         const user = await this.userModel.findByIdAndDelete(id)
+        user && this.fileService.removeFile(user.avatar) 
         return user?.id
     }
 

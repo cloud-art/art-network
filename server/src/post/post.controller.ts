@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, ValidationPipe } from "@nestjs/common";
 import { PostService } from "./post.service";
 import { Types } from "mongoose";
 import { CreatePostDto } from "../post/dto/create-post.dto";
@@ -11,7 +11,7 @@ export class PostController {
     ){}
     @Post('/create')
     
-    createPost(@Body() dto: CreatePostDto){
+    createPost(@Body(ValidationPipe) dto: CreatePostDto){
         return this.postService.createPost(dto)
     }
 
@@ -40,7 +40,7 @@ export class PostController {
     }
 
     @Put(':id')
-    update(@Param('id') id: Types.ObjectId, @Body() dto: UpdatePostDto){
+    update(@Param('id') id: Types.ObjectId, @Body(ValidationPipe) dto: UpdatePostDto){
         const post = this.postService.updatePost(id, dto)
         return post
     }

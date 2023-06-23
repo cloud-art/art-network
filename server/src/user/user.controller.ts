@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Types } from "mongoose";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { LoginUserDto } from "./dto/login-user.dto";
+import { UpdateTokenDto } from "./dto/update-token.dto";
 
 @Controller('/user')
 export class UserController {
@@ -14,21 +16,23 @@ export class UserController {
 
     // User
 
-    login(){
-        
+    @Post('/login')
+    login(@Body(ValidationPipe) dto: LoginUserDto){
+        return this.userService.login(dto)
     }
 
     @Post('/registration')
     @UseInterceptors(FileInterceptor('avatar'))
-    registration(@UploadedFile() avatar: Express.Multer.File, @Body() dto: CreateUserDto){
+    registration(@UploadedFile(ValidationPipe) avatar: Express.Multer.File, @Body(ValidationPipe) dto: CreateUserDto){
         return this.userService.registration(avatar, dto)
     }
 
-    auth(){
-
+    @Post('/updateToken')
+    check(@Body(ValidationPipe) dto: UpdateTokenDto){
+        return this.userService.updateToken(dto)
     }
 
-    @Get()
+    @Get('getAllUsers')
     getAll(){
         return this.userService.getAll()
     }
@@ -48,7 +52,7 @@ export class UserController {
     }
 
     @Put('/updateUser/:id')
-    updateUser(@Param('id') id: Types.ObjectId, @Body() dto: UpdateUserDto){
+    updateUser(@Param('id') id: Types.ObjectId, @Body(ValidationPipe) dto: UpdateUserDto){
         return this.userService.updateUser(id, dto)
     }
 
@@ -59,7 +63,7 @@ export class UserController {
 
     // Contacts
     @Post('/createContact')
-    createContact(@Body() dto: CreateContactDto){
+    createContact(@Body(ValidationPipe) dto: CreateContactDto){
         return this.userService.createContact(dto)
     }
 

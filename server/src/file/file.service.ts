@@ -16,7 +16,6 @@ export class FileService{
             const filePath = path.resolve(__dirname, '..', 'static', type)
 
             if(!fs.existsSync(filePath)) {
-                console.log('no path')
                 console.log(fs.mkdirSync(filePath, {recursive: true}))
             }
 
@@ -28,7 +27,11 @@ export class FileService{
         }
     }
 
-    removeFile(){
-
+    removeFile(filePath: string){
+        try{
+            fs.rmSync(path.resolve(__dirname, '..', `static/${filePath}`))
+        } catch(e){
+            throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR)
+        }
     }
 }
