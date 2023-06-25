@@ -2,6 +2,12 @@ import { configureStore, PreloadedState } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { useMemo } from "react";
 import { userReducer } from "./reducers/userSlice";
+import { artNetworkApi } from "@/services/artNetworkService";
+import {
+  addTokenMiddleware,
+  removeTokenMiddleware,
+  setTokenMiddleware,
+} from "./middlewares/localStorageMiddlewares";
 
 let store: AppStore;
 
@@ -9,8 +15,15 @@ export const initStore = (preloadedState = {}) => {
   return configureStore({
     reducer: {
       userReducer,
+      [artNetworkApi.reducerPath]: artNetworkApi.reducer,
     },
     preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware()
+        .concat(artNetworkApi.middleware)
+        .concat(setTokenMiddleware.middleware)
+        .concat(removeTokenMiddleware.middleware)
+        .concat(addTokenMiddleware.middleware),
   });
 };
 
@@ -29,6 +42,7 @@ export const initializeStore = (preloadedState: PreloadedState<RootState>) => {
 
 export function useStore(initialState: RootState) {
   const store = useMemo(() => initializeStore(initialState), [initialState]);
+  store.subscribe(() => {});
   return store;
 }
 

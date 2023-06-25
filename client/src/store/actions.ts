@@ -1,3 +1,3 @@
-import { setUser, setAuth } from "@/store/reducers/userSlice";
+import { signOut } from "@/store/reducers/userSlice";
 
-export { setUser, setAuth };
+export { signOut };

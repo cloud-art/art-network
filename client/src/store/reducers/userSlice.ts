@@ -1,46 +1,52 @@
 import { createSlice } from "@reduxjs/toolkit";
 import IUser from "@/types/IUser";
+import { artNetworkApi } from "@/services/artNetworkService";
+import jwtDecode from "jwt-decode";
 
-const initialState = {
+export interface AuthState {
+  isAuth: boolean;
+  user: IUser | null;
+}
+
+const initialState: AuthState = {
   isAuth: false,
-  user: {
-    id: "",
-    username: "",
-    name: "",
-    surname: "",
-    avatar: "",
-    password: "",
-    posts: [""],
-    contacts: [""],
-  },
+  user: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action) => {
-      const newUser: IUser = {
-        id: action.payload.id,
-        username: action.payload.username,
-        name: action.payload.name,
-        surname: action.payload.surname,
-        password: action.payload.password,
-        avatar: action.payload.avatar,
-        posts: action.payload.posts,
-        contacts: action.payload.contacts,
-      };
-      return {
-        ...state,
-        user: { ...newUser },
-      };
+    signOut: (state, action) => {
+      state.isAuth = false;
+      state.user = null;
     },
-    setAuth: (state, action) => {
-      state.isAuth = action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      artNetworkApi.endpoints.login.matchFulfilled,
+      (state, { payload }) => {
+        state.isAuth = true;
+        state.user = jwtDecode(payload.token);
+      }
+    );
+    builder.addMatcher(
+      artNetworkApi.endpoints.register.matchFulfilled,
+      (state, { payload }) => {
+        state.isAuth = true;
+        state.user = jwtDecode(payload.token);
+      }
+    );
+    builder.addMatcher(
+      artNetworkApi.endpoints.updateToken.matchFulfilled,
+      (state, { payload }) => {
+        state.isAuth = true;
+        state.user = jwtDecode(payload.token);
+      }
+    );
   },
 });
 
-export const { setUser, setAuth } = userSlice.actions;
+export const { signOut } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
