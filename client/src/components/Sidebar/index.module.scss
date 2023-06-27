@@ -1,0 +1,8 @@
+.sidebar {
+  flex-basis: 30%;
+  background-color: var(--color-dark);
+
+  @media (max-width: 650px) {
+    display: none;
+  }
+}

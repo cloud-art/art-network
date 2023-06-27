@@ -1,0 +1,27 @@
+.icon {
+  width: 40px;
+  height: 40px;
+  color: var(--color-text);
+  svg {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.small {
+  width: 28px;
+  height: 28px;
+}
+
+.large {
+  height: 48px;
+  width: 48px;
+}
+
+.circle {
+  border-radius: 50%;
+  background-color: var(--color-grey);
+  svg {
+    border-radius: 50%;
+  }
+}

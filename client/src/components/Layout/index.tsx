@@ -1,17 +1,20 @@
 import React, { PropsWithChildren } from 'react'
 import s from './index.module.scss'
+import Sidebar from '../Sidebar'
+import classNames from 'classnames'
 import Header from '../Header'
-
-type Props = {}
 
 const Layout: React.FC<PropsWithChildren> = ({
     children,
 }) => {
     return (
-        <>
-            <Header />
-            <main className="main">{children}</main>
-        </>
+        <main className={classNames(s.main, 'appContainer')}>
+            <Sidebar></Sidebar>
+            <div className={s.page}>
+                <Header />
+                {children}
+            </div>
+        </main>
     )
 }
 

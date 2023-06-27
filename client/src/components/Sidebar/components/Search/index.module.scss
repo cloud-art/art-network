@@ -1,0 +1,28 @@
+.search {
+  position: relative;
+
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  color: var(--color-text);
+  background-color: transparent;
+}
+
+.input {
+  padding: 0 45px;
+  width: 100%;
+}
+
+.back {
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  left: 15px;
+}
+
+.undo {
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  right: 15px;
+}

@@ -5,6 +5,13 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+body {
+  color: var(--color-text);
+  padding: 0;
+  margin: 0;
+  background-color: var(--color-dark);
+}
+
 *,
 *::before,
 *::after {
@@ -17,16 +24,20 @@ ul {
   padding: 0;
 }
 
-.container {
-  margin: 0 auto;
-  padding-left: var(--container-offset);
-  padding-right: var(--container-offset);
-  max-width: var(--container-width);
+.appContainer {
+  margin: $appOffset auto;
+  // padding-left: $appOffset;
+  // padding-right: $appOffset;
+  max-width: $appWidth;
+  height: $appHeight;
+
+  @media (max-width: $appWidth) {
+    margin: auto;
+    height: 100vh;
+  }
 }
 
-.appContainer {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  // justify-content: space-between;
+.container {
+  padding-right: $containerOffset;
+  padding-left: $containerOffset;
 }

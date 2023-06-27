@@ -1,0 +1,30 @@
+.label {
+  position: relative;
+  display: flex;
+}
+
+.textField {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  background-color: var(--color-grey-dark);
+  border: none;
+  border-radius: 5px;
+  padding: 0 12px;
+  height: 33px;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--color-text);
+
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+
+  &::placeholder {
+    color: #a5a5ad;
+    opacity: 1;
+  }
+}

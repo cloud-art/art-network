@@ -8,12 +8,9 @@ import classNames from 'classnames'
 const Header = () => {
     return (
         <header className={classNames(s.header, 'container')}>
-            <div className={s.left}>
-                <Icon type='circle'>
-                    <FiUser />
-                </Icon>
-                <span className={s.username}>username</span>
-            </div>
+            <Icon type='circle'>
+                <FiUser />
+            </Icon>
             <Icon size={'small'}>
                 <FiMoreVertical />
             </Icon>

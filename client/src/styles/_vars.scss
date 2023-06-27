@@ -1,13 +1,28 @@
+//base
+$appWidth: 1230px;
+$appOffset: 15px;
+$appWidth: calc(#{$appWidth} + #{$appOffset * 2});
+$appHeight: calc(100vh - #{$appOffset * 2});
+
+$containerOffset: 10px;
+
+//icons
+
 :root {
   // base
   --font-family: "Fira sans", sans-serif;
-  --content-width: 1230px;
-  --container-offset: 15px;
-  --container-width: calc(var(--content-width) + (var(--container-offset) * 2));
 
   // colors
   --color-white: #fff;
   --color-black: #000;
-  --color-dark: #141414;
+  --color-dark: #111b21;
   --color-light-dark: #1f1f1f;
+  --color-grey-dark: #202c33;
+  --color-grey: #6a7175;
+  --color-grey-light: #cfd4d6;
+  --color-pink-dark: #9b5757;
+  --color-pink: #ff8d8d;
+  --color-pink-light: #fdc7c7;
+
+  --color-text: #cfd4d6;
 }

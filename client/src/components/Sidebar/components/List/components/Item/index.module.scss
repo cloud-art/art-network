@@ -1,0 +1,25 @@
+.item {
+  display: flex;
+  align-items: center;
+  height: 72px;
+  &:not(:first-child) {
+    .right {
+      border-top: 1px solid var(--color-grey-dark);
+    }
+  }
+
+  &:hover {
+    background-color: var(--color-grey-dark);
+  }
+}
+
+.right {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  flex-grow: 1;
+  flex-basis: auto;
+
+  margin-left: 20px;
+}
