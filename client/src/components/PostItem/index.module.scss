@@ -1,0 +1,22 @@
+.bubble {
+  max-width: 600px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px;
+
+  border-radius: 8px;
+  background-color: var(--color-pink-dark);
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+}
+
+.header {
+  padding-bottom: 20px;
+}
+
+.content {
+}
