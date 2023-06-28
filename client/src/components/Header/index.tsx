@@ -4,19 +4,26 @@ import { FiMoreVertical } from 'react-icons/fi'
 import s from './index.module.scss'
 import Icon from '@/components/UI/Icon'
 import classNames from 'classnames'
+import { useTypedSelector } from '@/hooks/useTypedSelector'
 
 const Header = () => {
+    const selectedUser = useTypedSelector(state => state.userReducer.selectedUser)
+
     return (
         <header className={classNames(s.header, 'container')}>
-            <div className={s.left}>
-                <Icon type='circle'>
-                    <FiUser />
-                </Icon>
-                <span className={s.username}>username</span>
-            </div>
-            <Icon size={'small'}>
-                <FiMoreVertical />
-            </Icon>
+            {selectedUser &&
+                <>
+                    <div className={s.left}>
+                        <Icon type='circle'>
+                            <FiUser />
+                        </Icon>
+                        <span className={s.username}>{selectedUser.username}</span>
+                    </div>
+                    <Icon size={'small'}>
+                        <FiMoreVertical />
+                    </Icon>
+                </>
+            }
         </header>
     )
 }

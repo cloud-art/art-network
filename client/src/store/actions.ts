@@ -1,3 +1,3 @@
-import { signOut } from "@/store/reducers/userSlice";
+import { signOut, setSelectedUser } from "@/store/reducers/userSlice";
 
-export { signOut };
+export { signOut, setSelectedUser };

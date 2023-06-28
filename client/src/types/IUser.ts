@@ -1,9 +1,9 @@
 interface IUser {
-  id: string;
+  _id: string;
   username: string;
   name: string;
   surname: string;
-  password: string;
+  password?: string;
   avatar: string;
   posts: Array<string>;
   contacts: Array<string>;

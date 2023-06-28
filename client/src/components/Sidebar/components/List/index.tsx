@@ -1,19 +1,19 @@
 import React from 'react'
 import s from './index.module.scss'
 import Item from './components/Item'
-import classNames from 'classnames'
+import { artNetworkApi } from '@/services/artNetworkService'
+import IUser from '@/types/IUser'
+import { useTypedSelector } from '@/hooks/useTypedSelector'
 
 const List = () => {
-    const userList = [
-        { id: 1, username: 'user 1' },
-        { id: 2, username: 'user 2' },
-        { id: 3, username: 'user 3' },
-    ]
+    const user = useTypedSelector(state => state.userReducer.user)
+    user && artNetworkApi.useGetContactsQuery(user._id)
+    const contacts = useTypedSelector(state => state.userReducer.contacts)
 
     return (
         <ul className={s.list}>
-            {userList.map((user) => (
-                <Item username={user.username} />
+            {contacts.map((user: IUser) => (
+                <Item key={user._id} user={user} />
             ))}
         </ul>
     )
