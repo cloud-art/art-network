@@ -1,17 +1,23 @@
 import React from 'react'
 import s from './index.module.scss'
-import classNames from 'classnames'
 import PostList from '@/components/PostList'
 import { useTypedSelector } from '@/hooks/useTypedSelector'
+import PostInput from '@/components/PostInput'
 
 const Posts = () => {
-    const { selectedUser } = useTypedSelector(state => state.userReducer)
+    const { selectedUser, user } = useTypedSelector(state => state.userReducer)
 
     return (
-        <div className={classNames(s.page, 'container')}>
-            {selectedUser && <PostList userId={selectedUser._id} />}
-
-        </div>
+        <>
+            {
+                selectedUser &&
+                <PostList userId={selectedUser._id} />
+            }
+            {
+                selectedUser?._id === user?._id &&
+                <PostInput classname={s.postInput} />
+            }
+        </>
     )
 }
 

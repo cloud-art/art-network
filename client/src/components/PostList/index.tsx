@@ -1,8 +1,8 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import s from './index.module.scss'
-import IPost from '@/types/IPost'
 import PostItem from '../PostItem'
 import { artNetworkApi } from '@/services/artNetworkService'
+import classNames from 'classnames'
 
 type Props = {
   userId: string;
@@ -11,14 +11,13 @@ type Props = {
 const PostList: React.FC<Props> = ({
   userId
 }) => {
-
   const { data: posts } = artNetworkApi.useFetchUserPostsQuery(userId)
 
   return (
-    <ul className={s.list}>
-      {posts?.map((post: IPost) => (
-        <PostItem key={post._id} title={post.title} text={post.text} />
-      ))}
+    <ul className={classNames(s.list, 'container')}>
+      {posts?.map(post => {
+        return <PostItem key={post._id} title={post.title} text={post.text} />
+      })}
     </ul>
   )
 }

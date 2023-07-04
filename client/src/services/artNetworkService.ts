@@ -1,14 +1,37 @@
 import { API_URL } from "@/constants/api";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 
+interface Post {
+  id: string;
+  title: string;
+  text: string;
+}
+type PostsResponse = Post[];
+
 export const artNetworkApi = createApi({
   reducerPath: "artNetworkApi",
+  tagTypes: ["Posts"],
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (build) => ({
-    fetchUserPosts: build.query({
+    addPost: build.mutation({
+      query: ({ title, text, userId }) => ({
+        url: `/post/create`,
+        method: "POST",
+        body: { title, text, user: userId },
+      }),
+      invalidatesTags: [{ type: "Posts", id: "LIST" }],
+    }),
+    fetchUserPosts: build.query<PostsResponse, string>({
       query: (id: string) => ({
         url: `/post/getUserPosts/${id}`,
       }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Posts" as const, id })),
+              { type: "Posts", id: "LIST" },
+            ]
+          : [{ type: "Posts", id: "LIST" }],
     }),
     searchUsers: build.query({
       query: (username: string) => ({

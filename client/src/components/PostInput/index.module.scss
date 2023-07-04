@@ -1,0 +1,20 @@
+.form {
+  position: relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top: 1px dotted var(--color-grey);
+}
+
+.inputs {
+  margin-right: 50px;
+}
+
+.input {
+  margin-bottom: 10px;
+}
+
+.buttonSend {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}

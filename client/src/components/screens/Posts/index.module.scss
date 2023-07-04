@@ -1,13 +1,6 @@
-.page {
+.posts {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   background-color: var(--color-light-dark);
-
-  overflow: scroll;
-
-  //scroll hidding
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-  }
 }
